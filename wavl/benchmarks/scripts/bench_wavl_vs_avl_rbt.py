@@ -5,8 +5,11 @@ import time
 import csv
 import os
 from tree_wavl import WAVLTree
-from wavl.avl import AVLTree
-from wavl.rbt import RBTree  # Supongamos que tienes tu propia implementación de RBT
+from avl import AVLTree
+from rbt import RBTree  # Supongamos que tienes tu propia implementación de RBT
+
+import sys
+sys.setrecursionlimit(10**6)   
 
 def measure_height(root):
     """
@@ -125,5 +128,5 @@ if __name__ == "__main__":
     sizes = [1000, 5000, 10000, 20000]
     # Modos: "random" y "sequential"
     modes = ["random", "sequential"]
-    output_file = "../data/bench_wavl_avl_rbt.csv"
+    output_file = "data/bench_wavl_avl_rbt.csv"
     run_benchmarks(sizes, modes, output_file)

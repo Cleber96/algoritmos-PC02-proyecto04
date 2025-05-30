@@ -7,7 +7,7 @@ BLACK = "BLACK"
 
 class NodeRBT:
     """
-    Nodo para Red–Black Tree:
+    Nodo para Red_Black Tree:
     - key: la clave almacenada
     - left, right, parent: apuntadores a hijos y padre
     - color: RED o BLACK
@@ -28,7 +28,7 @@ class NodeRBT:
 
 class RBTree:
     """
-    Implementación de Red–Black Tree con:
+    Implementación de Red_Black Tree con:
     - search(key)
     - insert(key)
     - delete(key)
@@ -82,11 +82,6 @@ class RBTree:
     def _rotate_left(self, x: NodeRBT):
         """
         Rotación simple a la izquierda en x:
-             x                    y
-            / \                  / \
-           a  y      -->       x   c
-              / \              / \
-             b   c            a   b
         Incrementa rotation_count y actualiza punteros.
         """
         self.rotation_count += 1
@@ -115,11 +110,6 @@ class RBTree:
     def _rotate_right(self, x: NodeRBT):
         """
         Rotación simple a la derecha en x:
-              x                    y
-             / \                  / \
-            y  c       -->       a  x
-           / \                      / \
-          a   b                    b   c
         Incrementa rotation_count y actualiza punteros.
         """
         self.rotation_count += 1

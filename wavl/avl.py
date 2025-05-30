@@ -63,11 +63,6 @@ class AVLTree:
     def _rotate_left(self, z: NodeAVL) -> NodeAVL:
         """
         Rotación simple a la izquierda en z:
-            z                     y
-           / \                   / \
-          T1  y       -->       z  T3
-             / \               / \
-            T2 T3            T1 T2
         Incrementa rotation_count y actualiza parents/heights.
         Retorna `y` como nueva raíz de este subárbol.
         """
@@ -103,11 +98,6 @@ class AVLTree:
     def _rotate_right(self, z: NodeAVL) -> NodeAVL:
         """
         Rotación simple a la derecha en z:
-            z                     y
-           / \                   / \
-          y  T3      -->       T1  z
-         / \                       / \
-        T1 T2                    T2 T3
         Incrementa rotation_count y actualiza parents/heights.
         Retorna `y` como nueva raíz de este subárbol.
         """

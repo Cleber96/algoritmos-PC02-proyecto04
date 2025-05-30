@@ -28,7 +28,7 @@ def plot_metric(df, mode, metric_wavl, metric_avl, metric_rbt,
     plt.close()
 
 if __name__ == "__main__":
-    data_file = "../data/bench_wavl_avl_rbt.csv"
+    data_file = "benchmarks/data/bench_wavl_avl_rbt.csv"
     df = pd.read_csv(data_file)
 
     # 1) Comparar número de rotaciones (WAVL vs AVL vs RBT)
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         plt.title(f"Promotions (WAVL) vs Recolors (RBT) ({mode})")
         plt.legend()
         plt.grid(True)
-        filename = f"../plots/promote_vs_recolor_{mode}.png"
+        filename = f"benchmarks/plots/promote_vs_recolor_{mode}.png"
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         plt.savefig(filename)
         plt.close()
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         metric_rbt="rbt_height",
         ylabel="Altura del árbol",
         title="Altura comparada",
-        output_png="../plots/height_random.png"
+        output_png="benchmarks/plots/height_random.png"
     )
     plot_metric(
         df, mode="sequential",
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         metric_rbt="rbt_height",
         ylabel="Altura del árbol",
         title="Altura comparada",
-        output_png="../plots/height_sequential.png"
+        output_png="benchmarks/plots/height_sequential.png"
     )
 
     # 4) Comparar tiempo de inserción
@@ -96,7 +96,7 @@ if __name__ == "__main__":
         metric_rbt="rbt_time",
         ylabel="Tiempo (segundos)",
         title="Tiempo de inserción",
-        output_png="../plots/time_random.png"
+        output_png="benchmarks/plots/time_random.png"
     )
     plot_metric(
         df, mode="sequential",
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         metric_rbt="rbt_time",
         ylabel="Tiempo (segundos)",
         title="Tiempo de inserción",
-        output_png="../plots/time_sequential.png"
+        output_png="benchmarks/plots/time_sequential.png"
     )
 
     print("Gráficos generados en benchmarks/plots/")
