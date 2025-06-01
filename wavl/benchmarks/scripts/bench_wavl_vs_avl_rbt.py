@@ -12,20 +12,14 @@ import sys
 sys.setrecursionlimit(10**6)   
 
 def measure_height(root):
-    """
-    Calcula la altura máxima (profundidad) de un árbol recursivamente.
-    Definimos altura de nodo None = -1; nodo interno = 1 + max(altura(hijos)).
-    """
+
     if root is None:
         return -1
     return 1 + max(measure_height(root.left), measure_height(root.right))
 
 
 def benchmark_structures(n, mode="random"):
-    """
-    Ejecuta un único experimento para tamaño n y modo dado ("random" o "sequential").
-    Devuelve un diccionario con métricas para WAVL, AVL y RBT.
-    """
+
     # 1) Generar lista de claves según el modo
     if mode == "random":
         keys = random.sample(range(1, n * 10 + 1), n)
@@ -98,11 +92,6 @@ def benchmark_structures(n, mode="random"):
 
 
 def run_benchmarks(sizes, modes, output_csv):
-    """
-    Para cada tamaño en 'sizes' y cada modo en 'modes':
-      - Ejecuta benchmark_structures(n, mode)
-      - Acumula resultados y los escribe en 'output_csv'
-    """
     results = []
 
     for mode in modes:
