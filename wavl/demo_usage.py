@@ -1,10 +1,4 @@
 #!/usr/bin/env python3
-"""
-demo_usage.py
-
-Script de demostración para la clase WAVLTree. Muestra inserciones, eliminaciones
-y cuenta de operaciones de rebalanceo (promociones, demociones, rotaciones).
-"""
 
 from tree_wavl import WAVLTree
 from utils_wavl import print_tree

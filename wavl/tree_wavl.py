@@ -5,13 +5,6 @@ from node_wavl import NodeWAVL
 from utils_wavl import get_rank, rank_differences
 
 class WAVLTree:
-    """
-    Implementación de un Weak AVL Tree (WAVL).
-    Soporta search, insert y delete, manteniendo invariantes de rango:
-      1 <= r(node) - r(node.left) <= 2,  1 <= r(node) - r(node.right) <= 2
-    Cada nodo almacena un entero 'rank' en lugar de 'height'.
-    """
-
     def __init__(self):
         self.root: Optional[NodeWAVL] = None
         # Contadores para benchmarking
@@ -19,12 +12,7 @@ class WAVLTree:
         self.demote_count = 0
         self.rotation_count = 0
 
-    # ----------------------- SEARCH -----------------------
-
     def search(self, key) -> Optional[NodeWAVL]:
-        """
-        Busca recursivamente un nodo con clave 'key'. Retorna el NodeWAVL o None.
-        """
         return self._search_rec(self.root, key)
 
     def _search_rec(self, node: Optional[NodeWAVL], key) -> Optional[NodeWAVL]:
@@ -37,14 +25,8 @@ class WAVLTree:
         else:
             return self._search_rec(node.right, key)
 
-    # ----------------------- INSERT -----------------------
 
     def insert(self, key):
-        """
-        Inserta la clave 'key' en el WAVL Tree:
-          1) Si el árbol está vacío, crea raíz con rank=0.
-          2) Si no, inserta como en BST (_insert_rec) y llama _fix_insert.
-        """
         if self.root is None:
             self.root = NodeWAVL(key)
             return
@@ -53,10 +35,6 @@ class WAVLTree:
         self._fix_insert(new_node)
 
     def _insert_rec(self, node: NodeWAVL, key) -> NodeWAVL:
-        """
-        BST recursivo para insertar 'key'. Retorna el nodo recién creado.
-        Asume claves únicas.
-        """
         if key < node.key:
             if node.left is None:
                 new_node = NodeWAVL(key)
@@ -75,13 +53,6 @@ class WAVLTree:
                 return self._insert_rec(node.right, key)
 
     def _fix_insert(self, node: NodeWAVL):
-        """
-        Rebalancea tras insertar 'node' (rank=0) subiendo hacia la raíz:
-          – Si en 'current' alguna diferencia < 1, promueve.
-          – Si tras promover ambas diferencias < 1 (doble 0-0), rota y ajusta ranks.
-          – Si tras promover diferencias están en {1,2}, sube al padre.
-          – Si en 'current' ambas diferencias >=2, nada que hacer; termina.
-        """
         current = node.parent
 
         while current is not None:
@@ -141,13 +112,6 @@ class WAVLTree:
     # ----------------------- DELETE -----------------------
 
     def delete(self, key):
-        """
-        Elimina la clave 'key' del WAVL Tree:
-          1) Busca el nodo y guarda su parent.
-          2) Ejecuta _delete_rec para la parte BST.
-          3) Si root cambió, actualiza self.root.
-          4) Llama a _fix_delete en el parent (o en la nueva raíz si parent es None).
-        """
         target = self.search(key)
         if target is None:
             return
@@ -164,10 +128,7 @@ class WAVLTree:
                 self._fix_delete(self.root)
 
     def _delete_rec(self, node: Optional[NodeWAVL], key) -> Optional[NodeWAVL]:
-        """
-        BST recursivo para eliminar un nodo con 'key'. Retorna la nueva raíz
-        del subárbol actual.
-        """
+
         if node is None:
             return None
 
@@ -204,15 +165,6 @@ class WAVLTree:
         return node
 
     def _fix_delete(self, node: NodeWAVL):
-        """
-        Rebalancea tras eliminar un nodo, partiendo en 'node' (primer ancestro):
-          – Si en 'current' ambas diferencias en {1,2} → terminamos.
-          – Si alguna diferencia > 2 → demovemos, recalculamos:
-            • Si ambas diferencias en {1,2} → subimos y seguimos.
-            • Si alguna diferencia < 1 → rotamos con ajustes de rango y terminamos.
-            • Si sigue alguna diferencia > 2 → subimos y continuamos.
-          – Si alguna diferencia < 1 (0 o negativa) sin demover primero → demovemos y subimos.
-        """
         current = node
 
         while current is not None:
@@ -282,27 +234,16 @@ class WAVLTree:
     # ----------------------- PROMOTE / DEMOTE -----------------------
 
     def _promote(self, node: NodeWAVL):
-        """
-        Incrementa en 1 el rank de 'node' y contabiliza una promoción.
-        """
         node.rank += 1
         self.promote_count += 1
 
     def _demote(self, node: NodeWAVL):
-        """
-        Decrementa en 1 el rank de 'node' y contabiliza una democión.
-        """
         node.rank -= 1
         self.demote_count += 1
 
     # ----------------------- ROTATIONS -----------------------
 
     def _rotate_right(self, z: NodeWAVL) -> NodeWAVL:
-        """
-        Rotación simple a la derecha en el nodo z. Retorna la nueva raíz (y).
-        Sólo reestructura punteros y re-asigna parent; no ajusta height.
-        Ajuste de rank queda fuera de aquí.
-        """
         self.rotation_count += 1
 
         y = z.left
@@ -331,9 +272,6 @@ class WAVLTree:
         return y
 
     def _rotate_left(self, z: NodeWAVL) -> NodeWAVL:
-        """
-        Rotación simple a la izquierda en el nodo z. Retorna la nueva raíz (y).
-        """
         self.rotation_count += 1
 
         y = z.right

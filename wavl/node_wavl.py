@@ -3,15 +3,6 @@
 from typing import Optional
 
 class NodeWAVL:
-    """
-    Nodo para Weak AVL Tree (WAVL).
-    Atributos:
-        key    : clave o valor almacenado en el nodo.
-        left   : referencia al hijo izquierdo (NodeWAVL o None).
-        right  : referencia al hijo derecho (NodeWAVL o None).
-        parent : referencia al padre (NodeWAVL o None).
-        rank   : entero ≥ 0 que indica el “rank” de este nodo.
-    """
     def __init__(self, key):
         self.key: int = key
         self.left: Optional[NodeWAVL] = None

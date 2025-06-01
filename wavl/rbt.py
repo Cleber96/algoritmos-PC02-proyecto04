@@ -6,12 +6,6 @@ RED = "RED"
 BLACK = "BLACK"
 
 class NodeRBT:
-    """
-    Nodo para Red_Black Tree:
-    - key: la clave almacenada
-    - left, right, parent: apuntadores a hijos y padre
-    - color: RED o BLACK
-    """
     def __init__(self, key, color=RED):
         self.key: int = key
         self.left: Optional[NodeRBT] = None
@@ -27,13 +21,6 @@ class NodeRBT:
 
 
 class RBTree:
-    """
-    Implementación de Red_Black Tree con:
-    - search(key)
-    - insert(key)
-    - delete(key)
-    - Instrumentación: rotation_count (rotaciones) y recolor_count (recolores)
-    """
 
     def __init__(self):
         self.root: Optional[NodeRBT] = None
@@ -54,10 +41,6 @@ class RBTree:
             self.recolor_count += 1
 
     def _replace_node(self, u: NodeRBT, v: Optional[NodeRBT]):
-        """
-        Reemplaza el subárbol en `u` por el subárbol en `v`.
-        Actualiza parent pointers.
-        """
         if u.parent is None:
             self.root = v
         else:
@@ -69,9 +52,6 @@ class RBTree:
             v.parent = u.parent
 
     def _minimum(self, node: NodeRBT) -> NodeRBT:
-        """
-        Retorna el nodo con clave mínima en el subárbol rooted at 'node'.
-        """
         current = node
         while current.left:
             current = current.left
@@ -80,10 +60,6 @@ class RBTree:
     # -------------------- ROTACIONES --------------------
 
     def _rotate_left(self, x: NodeRBT):
-        """
-        Rotación simple a la izquierda en x:
-        Incrementa rotation_count y actualiza punteros.
-        """
         self.rotation_count += 1
         y = x.right
         b = y.left
@@ -108,10 +84,6 @@ class RBTree:
                 y.parent.right = y
 
     def _rotate_right(self, x: NodeRBT):
-        """
-        Rotación simple a la derecha en x:
-        Incrementa rotation_count y actualiza punteros.
-        """
         self.rotation_count += 1
         y = x.left
         b = y.right
@@ -138,9 +110,6 @@ class RBTree:
     # -------------------- SEARCH --------------------
 
     def search(self, key) -> Optional[NodeRBT]:
-        """
-        Busca un nodo con clave `key`. Retorna NodeRBT o None.
-        """
         return self._search_rec(self.root, key)
 
     def _search_rec(self, node: Optional[NodeRBT], key) -> Optional[NodeRBT]:
@@ -156,19 +125,11 @@ class RBTree:
     # -------------------- INSERT --------------------
 
     def insert(self, key):
-        """
-        Inserta un nuevo nodo con `key`:
-        1) Inserción BST normal (nodo color RED).
-        2) Llamar a _fix_insert para restaurar propiedades RBT.
-        """
         new_node = NodeRBT(key, color=RED)
         self._bst_insert(new_node)
         self._fix_insert(new_node)
 
     def _bst_insert(self, node: NodeRBT):
-        """
-        Inserta `node` en el lugar correspondiente como en un BST normal.
-        """
         parent = None
         curr = self.root
         while curr:
@@ -188,16 +149,7 @@ class RBTree:
                 parent.right = node
 
     def _fix_insert(self, z: NodeRBT):
-        """
-        Restablece propiedades RBT tras insertar z (color RED):
-        Mientras el padre de z es RED, ajusta con rotaciones y recolores:
-          - Caso 1: Tío RED → recolorear padre, tío, abuelo, y subir aplicación.
-          - Caso 2: Tío BLACK y z en "posición interna" → rotación para convertir a "exterior".
-          - Caso 3: Tío BLACK y z en "posición exterior"→ rotación en abuelo, recolorear.
-        Finalmente, color(root) = BLACK.
-        """
         while z.parent and z.parent.color == RED:
-            # z tiene padre y es RED
             parent = z.parent
             grandpa = parent.parent
             if grandpa is None:
@@ -248,35 +200,21 @@ class RBTree:
     # -------------------- DELETE --------------------
 
     def delete(self, key):
-        """
-        Elimina un nodo con clave `key`:
-        1) Buscar nodo a eliminar z.
-        2) Si no existe, return.
-        3) Si z tiene dos hijos, intercambiar su clave con el sucesor.
-        4) Luego borrar el nodo (que tiene a lo sumo un hijo).
-        5) Si el nodo borrado era BLACK, llamar a _fix_delete en el hijo que lo reemplazó (o en None).
-        """
         z = self.search(key)
         if z is None:
             return
-
-        # Si z tiene dos hijos, intercambiar con sucesor
         if z.left and z.right:
             succ = self._minimum(z.right)
             z.key = succ.key
             z = succ
 
-        # Ahora z tiene a lo sumo un hijo
         replacement = z.left if z.left else z.right
-
-        # Guardar color original
         original_color = z.color
 
-        # Reemplazar z con replacement (que puede ser None)
+
         if replacement:
             self._replace_node(z, replacement)
         else:
-            # replacement = None → borrar z y ajustar parent pointers
             if z.parent is None:
                 self.root = None
             else:
@@ -284,19 +222,13 @@ class RBTree:
                     z.parent.left = None
                 else:
                     z.parent.right = None
-            replacement = None  # para claridad
-
-        # Si el color del nodo eliminado era BLACK, se rompe propiedad de cantidad de negros
+            replacement = None
+        
         if original_color == BLACK:
             self._fix_delete(replacement, z.parent)
 
     def _fix_delete(self, x: Optional[NodeRBT], parent: Optional[NodeRBT]):
-        """
-        Restaura las propiedades RBT tras eliminar un nodo negro:
-        - x es el nodo que reemplazó al nodo eliminado (puede ser None).
-        - parent es el padre de x (o None si x es new root).
-        Aplica los 4 casos clásicos hasta restablecer propiedades.
-        """
+
         while (x is None or x.color == BLACK) and x is not self.root:
             if x == (parent.left if parent else None):
                 # x es hijo izquierdo
